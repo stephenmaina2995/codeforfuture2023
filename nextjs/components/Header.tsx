@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 //import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { Bars3Icon } from "@heroicons/react/24/solid";
 
 const getEthereumObject = () => window.ethereum;
 const findMetaMaskAccount = async () => {
@@ -45,7 +46,7 @@ const NavLink = ({
     <Link
       href={href}
       passHref
-      className={`${isActive ? "shadow-md" : ""} py-1.5 px-3 rounded-full`}
+      className={`${isActive ? "shadow-md" : ""} py-1.5 px-3 rounded-full `}
     >
       {children}
     </Link>
@@ -55,6 +56,7 @@ const NavLink = ({
 export const Header = () => {
   //State setters
   const [currentAccount, setCurrentAccount] = useState("");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const connectWallet = async () => {
     try {
@@ -95,18 +97,42 @@ export const Header = () => {
   );
 
   return (
-    <div className="flex justify-between w-full mb-16 py-4 px-2">
-      <nav className="flex list-none gap-2">{navLinks}</nav>
-      {
-        <button
-          className="rounded-full border py-1.5 px-3"
-          onClick={connectWallet}
+    <>
+      <div className="flex justify-between w-full mb-16 py-4 px-2 shadow-md relative">
+        <div className="w-1/2 flex items-center">
+          <button
+            type="button"
+            className="lg:hidden w-8"
+            onClick={() => {
+              setIsDrawerOpen((prevIsOpenState) => !prevIsOpenState);
+            }}
+          >
+            <Bars3Icon className="h-1/2" />
+          </button>
+          <nav className="list-none gap-2 hidden lg:flex">{navLinks}</nav>
+        </div>
+        {
+          <button
+            className="rounded-full py-1.5 px-3 shadow-md"
+            onClick={connectWallet}
+          >
+            {!currentAccount
+              ? "Connect Wallet"
+              : currentAccount.slice(0, 4) + "..." + currentAccount.slice(-4)}
+          </button>
+        }
+      </div>
+      {isDrawerOpen && (
+        <ul
+          tabIndex={0}
+          className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-primary rounded-box w-52"
+          onClick={() => {
+            setIsDrawerOpen(false);
+          }}
         >
-          {!currentAccount
-            ? "Connect Wallet"
-            : currentAccount.slice(0, 4) + "..." + currentAccount.slice(-4)}
-        </button>
-      }
-    </div>
+          {navLinks}
+        </ul>
+      )}
+    </>
   );
 };
