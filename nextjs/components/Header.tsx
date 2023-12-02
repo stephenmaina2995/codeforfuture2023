@@ -46,7 +46,7 @@ const NavLink = ({
     <Link
       href={href}
       passHref
-      className={`${isActive ? "shadow-md" : ""} py-1.5 px-3 rounded-full `}
+      className={`${isActive ? "shadow-md" : ""} py-1.5 px-3 rounded-full mt-4`}
     >
       {children}
     </Link>
@@ -121,18 +121,17 @@ export const Header = () => {
               : currentAccount.slice(0, 4) + "..." + currentAccount.slice(-4)}
           </button>
         }
+        {isDrawerOpen && (
+          <ul
+            className="p-2 shadow absolute -bottom-full w-52 z-10"
+            onClick={() => {
+              setIsDrawerOpen(false);
+            }}
+          >
+            {navLinks}
+          </ul>
+        )}
       </div>
-      {isDrawerOpen && (
-        <ul
-          tabIndex={0}
-          className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-primary rounded-box w-52"
-          onClick={() => {
-            setIsDrawerOpen(false);
-          }}
-        >
-          {navLinks}
-        </ul>
-      )}
     </>
   );
 };
